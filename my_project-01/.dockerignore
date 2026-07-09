@@ -1,0 +1,11 @@
+.env
+
+.git
+
+.gitignore
+
+db_data/
+
+__pycache__
+
+*.pyc
