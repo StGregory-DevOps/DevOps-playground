@@ -1,0 +1,39 @@
+<!DOCTYPE html>
+<html lang="ru">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>CineVault — Film Archive</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link href="https://fonts.googleapis.com/css2?family=Fraunces:opsz,wght@9..144,500;9..144,700&family=IBM+Plex+Sans:wght@400;500;600&family=IBM+Plex+Mono:wght@500&display=swap" rel="stylesheet">
+<link rel="stylesheet" href="style.css">
+</head>
+<body>
+
+<header class="site-header">
+  <div class="reel-strip" aria-hidden="true"></div>
+  <div class="header-inner">
+    <h1 class="logo">Cine<span>Vault</span></h1>
+    <p class="tagline">An archive of films no one asked for, catalogued anyway.</p>
+  </div>
+  <div class="reel-strip" aria-hidden="true"></div>
+</header>
+
+<main>
+  <section class="controls">
+    <input type="text" id="search-input" placeholder="Найти фильм по названию…" autocomplete="off">
+    <div id="genre-chips" class="genre-chips"></div>
+  </section>
+
+  <section id="status" class="status"></section>
+
+  <section id="grid" class="grid"></section>
+</main>
+
+<footer>
+  <p>CineVault Archive · Backend: Flask + PostgreSQL · Cache: Redis · Served via Nginx</p>
+</footer>
+
+<script src="script.js"></script>
+</body>
+</html>
