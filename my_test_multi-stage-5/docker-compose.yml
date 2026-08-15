@@ -1,0 +1,14 @@
+services:
+  product-api:
+    build:
+      context: .
+      dockerfile: Dockerfile
+    container_name: product-api-container
+    ports:
+      - "6800:6800"
+    environment:
+      - DATABASE_URL=sqlite:////app/db/products.db
+    volumes:
+      - product_db:/app/db/
+volumes:
+  product_db:
