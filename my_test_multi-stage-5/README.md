@@ -1,85 +1,95 @@
-# contact-api — Практическое задание №3: Docker Multi-Stage Build
+# product-api — Практическое задание №4: Docker Multi-Stage Build
 
-## Описание проекта
+## Описание проекту
 
-REST API для управления контактами (Contact Book) на FastAPI + SQLite.
+REST API для управління товарами (Product Catalog) на FastAPI + SQLite.
 
-### Эндпоинты
+### Ендпоінти
 
-| Метод  | Путь                 | Описание                  |
-|--------|----------------------|---------------------------|
-| GET    | /ping                | Проверка состояния        |
-| GET    | /contacts            | Список всех контактов     |
-| POST   | /contacts            | Создать контакт           |
-| GET    | /contacts/{id}       | Получить контакт по ID    |
-| PATCH  | /contacts/{id}       | Обновить контакт          |
-| DELETE | /contacts/{id}       | Удалить контакт           |
+| Метод  | Шлях                  | Опис                    |
+|--------|-----------------------|-------------------------|
+| GET    | /status               | Перевірка стану         |
+| GET    | /products             | Список усіх товарів     |
+| POST   | /products             | Створити товар          |
+| GET    | /products/{id}        | Отримати товар по ID    |
+| PATCH  | /products/{id}        | Оновити товар           |
+| DELETE | /products/{id}        | Видалити товар          |
 
-Swagger UI: `http://localhost:7500/docs`
+Swagger UI: `http://localhost:6800/docs`
 
 ---
 
-## Структура проекта
+## Структура проекту
 
 ```
-contact-api/
+product-api/
 ├── app/
 │   ├── __init__.py
 │   ├── main.py        # FastAPI endpoints
 │   ├── database.py    # SQLAlchemy engine + session
-│   ├── models.py      # ORM модель Contact
-│   └── schemas.py     # Pydantic схемы
+│   ├── models.py      # ORM модель Product
+│   └── schemas.py     # Pydantic схеми
 ├── requirements.txt
 ├── README.md
-├── Dockerfile         # ← создаёшь сам
-└── docker-compose.yml # ← создаёшь сам
+├── Dockerfile         # ← створюєш сам
+└── docker-compose.yml # ← створюєш сам
 ```
 
 ---
 
-## Твоё задание
+## Твоє завдання
 
-### Требования к Dockerfile
+### Вимоги до Dockerfile
 
 **Stage 1: `builder`**
-- Базовый образ: `python:3.12-slim`
-- Рабочая папка: `/workspace`
-- venv создать в `/opt/venv`
-- Установить зависимости из `requirements.txt`
-- Использовать флаг `--no-cache-dir` при установке
+- Базовий образ: `python:3.11-slim`
+- Робоча папка: `/deps`
+- venv створити в `/opt/venv`
+- Встановити залежності з `requirements.txt`
+- Використати прапор `--no-cache-dir` при встановленні
 
 **Stage 2: `runtime`**
-- Базовый образ: `python:3.12-slim`
-- Пользователь: `apiuser`
-- Скопировать `/opt/venv` из builder с правами `apiuser`
-- Рабочая папка: `/app`
-- Скопировать папку `app/` с правами `apiuser`
-- Создать папку для базы данных: `/app/contacts_data`
-- `DATABASE_URL`: `sqlite:////app/contacts_data/contacts.db`
-- Порт: `7500`
-- CMD: `uvicorn app.main:app --host 0.0.0.0 --port 7500`
+- Базовий образ: `python:3.11-slim`
+- Користувач: `produser`
+- Скопіювати `/opt/venv` з builder з правами `produser`
+- Активувати venv через ENV PATH
+- Робоча папка: `/app`
+- Скопіювати папку `app/` з правами `produser`
+- Створити папку для бази даних: `/app/db`
+- `DATABASE_URL`: `sqlite:////app/db/products.db`
+- Порт: `6800`
+- CMD: `uvicorn app.main:app --host 0.0.0.0 --port 6800`
 
-### Требования к docker-compose.yml
+### Вимоги до docker-compose.yml
 
-- Сервис: `contact-api`
-- Имя контейнера: `contact-api-container`
-- Порт: `7500:7500`
-- Именованный volume: `contacts_data` примонтирован в `/app/contacts_data`
-- Передать `DATABASE_URL` через environment
+- Сервіс: `product-api`
+- Ім'я контейнера: `product-api-container`
+- Порт: `6800:6800`
+- Іменований volume: `product_db` змонтований в `/app/db`
+- Передати `DATABASE_URL` через environment
 
 ---
 
-## Проверка после запуска
+## Перевірка після запуску
 
 ```bash
-# Создать контакт
-curl -X POST http://localhost:7500/contacts \
+# Створити товар
+curl -X POST http://localhost:6800/products \
   -H "Content-Type: application/json" \
-  -d '{"name": "Григорій", "phone": "+380991234567", "email": "greg@example.com"}'
+  -d '{"name": "Ноутбук", "description": "ASUS VivoBook", "price": 25000.00, "in_stock": true}'
 
-# Список контактов
-curl http://localhost:7500/contacts
+# Список товарів
+curl http://localhost:6800/products
 
-# Ping
-curl http://localhost:7500/ping
+# Статус
+curl http://localhost:6800/status
 ```
+
+---
+
+## Підказки
+
+- Фреймворк: **FastAPI** — команда запуску через `uvicorn`
+- База даних: **SQLite** — файл зберігається в `/app/db/`
+- Порт додатку: **6800**
+- Папка з кодом: **app/**
