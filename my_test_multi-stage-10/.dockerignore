@@ -1,0 +1,11 @@
+__pucache__/
+.env
+.git
+.gitignore
+venv
+Dockerfile
+docker-compose.yml
+.dockerignore
+*.pyc
+*.log
+*.md
