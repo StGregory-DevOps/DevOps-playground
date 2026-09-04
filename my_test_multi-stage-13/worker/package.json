@@ -1,0 +1,13 @@
+{
+  "name": "pixelforge-worker",
+  "version": "1.0.0",
+  "type": "module",
+  "main": "src/index.js",
+  "scripts": {
+    "start": "node src/index.js"
+  },
+  "dependencies": {
+    "pg": "^8.12.0",
+    "sharp": "^0.33.4"
+  }
+}

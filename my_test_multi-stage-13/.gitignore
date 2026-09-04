@@ -1,0 +1,6 @@
+.env
+node_modules/
+data/
+uploads/
+processed/
+npm-debug.log

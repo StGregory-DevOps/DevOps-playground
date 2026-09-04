@@ -1,0 +1,62 @@
+body {
+  font-family: system-ui, sans-serif;
+  max-width: 640px;
+  margin: 40px auto;
+  padding: 0 16px;
+  color: #1a1a1a;
+  background: #fafafa;
+}
+
+h1 {
+  margin-bottom: 0;
+}
+
+.subtitle {
+  color: #666;
+  margin-top: 4px;
+}
+
+form {
+  display: flex;
+  gap: 8px;
+  margin: 24px 0;
+}
+
+button {
+  cursor: pointer;
+  padding: 8px 16px;
+  border: 1px solid #333;
+  background: #fff;
+  border-radius: 4px;
+}
+
+button:hover {
+  background: #333;
+  color: #fff;
+}
+
+#image-list {
+  list-style: none;
+  padding: 0;
+}
+
+#image-list li {
+  padding: 12px;
+  margin-bottom: 8px;
+  border: 1px solid #ddd;
+  border-radius: 6px;
+  background: #fff;
+}
+
+.status {
+  font-weight: 600;
+}
+
+.status-pending { color: #b58900; }
+.status-processing { color: #0077cc; }
+.status-done { color: #2a9d3f; }
+.status-failed { color: #d33; }
+
+.thumbs a {
+  margin-right: 12px;
+}

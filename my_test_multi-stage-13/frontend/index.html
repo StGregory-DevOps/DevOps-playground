@@ -1,0 +1,27 @@
+<!DOCTYPE html>
+<html lang="ru">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>PixelForge</title>
+  <link rel="stylesheet" href="style.css" />
+</head>
+<body>
+  <main>
+    <h1>PixelForge</h1>
+    <p class="subtitle">Загрузи картинку — воркер сделает превью и ч/б версию</p>
+
+    <form id="upload-form">
+      <input type="file" id="file-input" accept="image/*" required />
+      <button type="submit">Загрузить</button>
+    </form>
+    <p id="upload-status"></p>
+
+    <h2>Изображения</h2>
+    <button id="refresh-btn">Обновить список</button>
+    <ul id="image-list"></ul>
+  </main>
+
+  <script src="app.js"></script>
+</body>
+</html>

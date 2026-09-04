@@ -1,0 +1,10 @@
+.env
+node_modules
+.git
+.gitignore
+__cache__
+/data
+npm-debug.log
+/uploads
+/processed
+*.swp
