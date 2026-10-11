@@ -1,8 +1,18 @@
 name: CI
 on: push
 jobs:
-  hello:
+  build-api:
     runs-on: ubuntu-latest
     steps:
-      - name: Привет из пайплайна
-        run: echo " Пайплан реально запустился!"
+      - name: Скачать код репозитория
+        uses: actions/checkout@v7
+
+      - name: Установить Node.js
+        uses: actions/checkout@v7
+        with:
+          node-version: '20'
+
+      - name: Установить зависимости api
+        working-directory: my_test_multi-stage-13/api
+    
+        run: npm ci
