@@ -1,23 +1,32 @@
 name: CI
 on: push
+
+permissions: 
+  contents: read
+  packages: write
+  
 jobs:
-  build-api:
+  build-and-push-api:
     runs-on: ubuntu-latest
     steps:
       - name: Скачать код репозитория
         uses: actions/checkout@v7
 
-      - name: Установить Node.js
-        uses: actions/setup-node@v7
+      - name: Войти в GitHub Container Registry
+        uses: docker/login-action@v4
         with:
-          node-version: '20'
+          registry: ghcr.io
+          username: ${{ github.actor }}
+          password: ${{ secrets.GITHUB_TOKEN }}
 
-      - name: Установить зависимости api
-        working-directory: my_test_multi-stage-13/api
-    
-        run: npm ci
-      - name: Собрать Docker-образ api
-        run: docker build -t pixelforge-api:test my_test_multi-stage-13/api
+      - name: Собрать и запушить образ api
+        uses: docker/build-push-action@v7
+        with:
+          context: my_test_multi-stage-13/api
+          push: true
+          tags: ghcr.io/stgregory-devops/devops-playground/pixelforge-api:${{ github.sha }}
+          
+
 
   build-worker:
     runs-on: ubuntu-latest
