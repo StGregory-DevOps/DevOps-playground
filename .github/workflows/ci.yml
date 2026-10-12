@@ -34,13 +34,16 @@ jobs:
       - name: Скачать код репозитория
         uses: actions/checkout@v7
         
-      - name: Установить Node.js
-        uses: actions/setup-node@v7
+      - name: Войти в GitHub Container Registry
+        uses: docker/login-action@v4
+        with:                                          
+          registry: ghcr.io
+          username: ${{ github.actor }}
+          password: ${{ secrets.GITHUB_TOKEN }}
+
+      - name: Собрать и запушить образ worker
+        uses: docker/build-push-action@v7
         with:
-          node-version: '20'
-      - name: Установить зависимости worker
-        working-directory: my_test_multi-stage-13/worker
-        run: npm ci
-      - name: Собрать Docker-образ worker
-        run: docker build -t pixelforge-worker:test my_test_multi-stage-13/worker
-          
+          context: my_test_multi-stage-13/worker
+          push: true
+          tags: ghcr.io/stgregory-devops/devops-playground/pixelforge-worker:${{ github.sha }}
