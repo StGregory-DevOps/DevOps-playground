@@ -16,3 +16,5 @@ jobs:
         working-directory: my_test_multi-stage-13/api
     
         run: npm ci
+      - name: Собрать Docker образ api
+        run: docker build -t pixelforge-api:test my_test_multi-stage-13/api
