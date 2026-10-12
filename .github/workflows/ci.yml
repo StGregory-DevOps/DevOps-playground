@@ -16,5 +16,22 @@ jobs:
         working-directory: my_test_multi-stage-13/api
     
         run: npm ci
-      - name: Собрать Docker образ api
+      - name: Собрать Docker-образ api
         run: docker build -t pixelforge-api:test my_test_multi-stage-13/api
+
+  build-worker:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Скачать код репозитория
+        uses: actions/checkout@v7
+        
+      - name: Установить Node.js
+        uses: actions/setup-node@v7
+        with:
+          node-version: '20'
+      - name: Установить зависимости worker
+        working-directory: my_test_multi-stage-13/worker
+        run: npm ci
+      - name: Собрать Docker-образ worker
+        run: docker build -t pixelforge-worker:test my_test_multi-stage-13/worker
+          
