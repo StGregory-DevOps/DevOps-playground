@@ -1,0 +1,65 @@
+name: CI my_test_multi-stage-11
+
+on:
+  push:
+    branches: [ main, dev ]
+    paths:
+      - 'my_test_multi-stage-11/**'
+      - '.github/workflows/ci.yml'
+  pull_request:
+    branches: [ main, dev ]
+
+permissions:
+  contents: read
+  packages: write
+
+jobs:
+  build-backend:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Скачать код репозитория
+        uses: actions/checkout@v4
+
+      - name: Проверка Dockerfile (Hadolint)
+        uses: hadolint/hadolint-action@v3.1.0
+        with:
+          dockerfile: my_test_multi-stage-11/backend/Dockerfile
+
+      - name: Установка и запуск тестов
+        run: |
+          cd my_test_multi-stage-11/backend
+          pip install -r requirements.txt
+
+
+  build-frontend:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Скачать код репозитория
+        uses: actions/checkout@v4
+
+      - name: Проверка Dockerfile (Hadolint)
+        uses: hadolint/hadolint-action@v3.1.0
+        with:
+          dockerfile: my_test_multi-stage-11/frontend/Dockerfile
+
+      - name: Установка и запуск тестов
+        run: |
+          cd my_test_multi-stage-11/frontend
+          npm ci
+          npm run build
+
+  build-worker:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Скачать код репозитория
+        uses: actions/checkout@v4
+
+      - name: Проверка Dockerfile (Hadolint)
+        uses: hadolint/hadolint-action@v3.1.0
+        with:
+          dockerfile: my_test_multi-stage-11/worker/Dockerfile
+
+      - name: Установка и запуск тестов
+        run: |
+          cd my_test_multi-stage-11/worker
+          pip install -r requirements.txt
