@@ -115,7 +115,7 @@ jobs:
           npm test
 
   build-worker:
-    needs: [lint-worker, test-wopker]
+    needs: [lint-worker, test-worker]
     if: github.event_name == 'push'
     runs-on: ubuntu-latest
     steps:
