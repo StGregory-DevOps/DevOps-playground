@@ -17,7 +17,7 @@ permissions:
   contents: read
 
 jobs:
-  # 1. Линтинг Dockerfile
+  #Линтинг Dockerfile
   lint-api:
     runs-on: ubuntu-latest
     steps:
@@ -30,7 +30,7 @@ jobs:
           dockerfile: my_test_multi-stage-15/api/Dockerfile
           ignore: DL3008
 
-  # 2. Запуск тестов
+  #Запуск тестов
   test-api:
     runs-on: ubuntu-latest
     defaults:
@@ -97,7 +97,7 @@ jobs:
           dockerfile: my_test_multi-stage-15/worker/Dockerfile
           ignore: DL3008
 
-  # 2. Запуск тестов
+  #Запуск тестов
   test-worker:
     runs-on: ubuntu-latest
     defaults:
