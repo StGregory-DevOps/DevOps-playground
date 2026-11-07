@@ -1,0 +1,13 @@
+extends: default
+
+ignore: |
+  node_modules/
+  .venv/
+
+rules:
+  document-start: disable
+  line-length:
+    max: 120
+  # GitHub Actions uses the key "on:", which yamllint would flag as a boolean
+  truthy:
+    check-keys: false

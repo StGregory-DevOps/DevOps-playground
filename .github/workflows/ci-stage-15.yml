@@ -1,0 +1,149 @@
+name: CI linkwatch
+
+on:
+  push:
+    branches: [ main, dev ]
+    paths:
+      - 'my_test_multi-stage-15/**'
+      - '.github/workflows/ci-stage-15.yml'
+  #Запускать PR-проверку,если изменения пытаются влить в main или dev
+  pull_request:
+    branches: [ main, dev ]
+    paths:
+      - 'my_test_multi-stage-15/**'
+      - '.github/workflows/ci-stage-15.yml'
+
+permissions:
+  contents: read
+
+jobs:
+  # 1. Линтинг Dockerfile
+  lint-api:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Скачать код репозитория
+        uses: actions/checkout@v4
+
+      - name: Проверка Dockerfile (Hadolint)
+        uses: hadolint/hadolint-action@v3.1.0
+        with:
+          dockerfile: my_test_multi-stage-15/api/Dockerfile
+          ignore: DL3008
+
+  # 2. Запуск тестов
+  test-api:
+    runs-on: ubuntu-latest
+    defaults:
+      run:
+        working-directory: my_test_multi-stage-15/api
+    steps:
+      - name: Скачать код репозитория
+        uses: actions/checkout@v4
+
+      - name: Установить Python
+        uses: actions/setup-python@v5
+        with:
+          python-version: '3.12'
+          cache: pip
+          cache-dependency-path: |
+            my_test_multi-stage-15/api/requirements.txt
+            my_test_multi-stage-15/api/requirements-dev.txt
+
+      - name: Установка и запуск тестов
+        run: |
+          pip install -r requirements.txt requirements-dev.txt
+          ruff check .
+          ruff format --check .
+          pytest
+
+  build-api:
+    needs: [lint-api, test-api]
+    if: githab.event_name == 'push'
+    runs-on: ubuntu-latest
+    steps:
+      - name: Скачать код репозитория
+        uses: actions/checkout@v4
+
+      - name: Настроить Docker Buildx
+        uses: docker/setup-buildx-action@v3
+
+      - name: Войти в GitHub Container Registry
+        uses: docker/login-action@v3
+        with:
+          registry: ghcr.io
+          username: ${{ github.actor }}
+          password: ${{ secrets.GITHUB_TOKEN }}
+
+      - name: Собрать и запушить api
+        uses: docker/build-push-action@v5
+        with:
+          context: ./my_test_multi-stage-15/api
+          push: true
+          tags: ghcr.io/stgregory-devops/devops-playground/my_test_multi-stage-15/linkwatch-api:${{ github.sha }}
+          cache-from: type=gha,scope=api
+          cache-to: type=gha,mode=max,scope=api
+          cache-from: type=gha,scope=api
+          cache-to: type=gha,mode=max,scope=api
+
+   lint-worker:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Скачать код репозитория
+        uses: actions/checkout@v4
+
+      - name: Проверка Dockerfile (Hadolint)
+        uses: hadolint/hadolint-action@v3.1.0
+        with:
+          dockerfile: my_test_multi-stage-15/worker/Dockerfile
+          ignore: DL3008
+
+  # 2. Запуск тестов
+  test-worker:
+    runs-on: ubuntu-latest
+    defaults:
+      run:
+        working-directory: my_test_multi-stage-15/worker
+    steps:
+      - name: Скачать код репозитория
+        uses: actions/checkout@v4
+
+      - name: Установить Python
+        uses: actions/setup-node@v4
+        with:
+          node-version: '20'
+          cache: npm
+          cache-dependency-path: my_test_multi-stage-15/worker/package-lock.js
+
+      - name: Установка и запуск тестов
+        run: |
+          npm ci
+          npm run lint
+          npm test
+
+  build-worker:
+    needs: [lint-worker, test-wopker]
+    if: githab.event_name == 'push'
+    runs-on: ubuntu-latest
+    steps:
+      - name: Скачать код репозитория
+        uses: actions/checkout@v4
+
+      - name: Настроить Docker Buildx
+        uses: docker/setup-buildx-actions@v3
+
+      - name: Войти в GitHub Container Registry
+        uses: docker/login-action@v3
+        with:
+          registry: ghcr.io
+          username: ${{ github.actor }}
+          password: ${{ secrets.GITHUB_TOKEN }}
+
+      - name: Собрать и запушить worker
+        uses: docker/build-push-action@v5
+        with:
+          context: ./my_test_multi-stage-16/worker
+          push: true
+          tags: ghcr.io/stgregory-devops/devops-playground/my_test_multi-stage-15/linkwatch-worker:${{ github.sha }}
+          cache-from: type=gha,scope=worker
+          cache-to: type=gha,mode=max,scope=worker
+

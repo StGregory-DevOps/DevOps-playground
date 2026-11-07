@@ -1,0 +1,59 @@
+services:
+  redis:
+    image: redis:7-alpine
+    container_name: linkwatch-cache
+    restart: unless-stopped
+    networks:
+      - backend-net
+    volumes:
+      - redis_data:/data
+    healthcheck:
+      test: ["CMD", "redis-cli", "ping"]
+      interval: 5s
+      timeout: 3s
+      retries: 5
+
+  api:
+    build:
+      context: ./api
+    container_name: linkwatch-api
+    restart: unless-stopped
+    ports:
+      - "8000:8000"
+    networks:
+      - backend-net
+    env_file:
+      - .env
+    healthcheck:
+      test: ["CMD", "python", "-c", "import urllib.request as r,sys; sys.exit(0 if r.urlopen('http://localhost:8000/health',timeout=3).status==200 else 1)"]
+      interval: 15s
+      timeout: 5s
+      retries: 3
+      start_period: 10s
+    depends_on:
+      redis:
+        condition: service_healthy
+
+  worker:
+    build:
+      context: ./worker
+    container_name: linkwatch-worker
+    restart: unless-stopped
+    networks:
+      - backend-net
+    env_file:
+      - .env
+    healthcheck:
+      test: ["CMD", "pgrep", "-f", "node src/index.js"]
+      interval: 5s
+      timeout: 3s
+      retries: 3
+      start_period: 10s
+    depends_on:
+      redis:
+        condition: service_healthy
+
+volumes:
+  redis_data:
+networks:
+  backend-net:
