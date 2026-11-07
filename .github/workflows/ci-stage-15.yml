@@ -79,8 +79,6 @@ jobs:
           tags: ghcr.io/stgregory-devops/devops-playground/my_test_multi-stage-15/linkwatch-api:${{ github.sha }}
           cache-from: type=gha,scope=api
           cache-to: type=gha,mode=max,scope=api
-          cache-from: type=gha,scope=api
-          cache-to: type=gha,mode=max,scope=api
 
   lint-worker:
     runs-on: ubuntu-latest
