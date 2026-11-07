@@ -55,7 +55,7 @@ jobs:
 
   build-api:
     needs: [lint-api, test-api]
-    if: githab.event_name == 'push'
+    if: github.event_name == 'push'
     runs-on: ubuntu-latest
     steps:
       - name: Скачать код репозитория
@@ -116,7 +116,7 @@ jobs:
 
   build-worker:
     needs: [lint-worker, test-wopker]
-    if: githab.event_name == 'push'
+    if: github.event_name == 'push'
     runs-on: ubuntu-latest
     steps:
       - name: Скачать код репозитория
