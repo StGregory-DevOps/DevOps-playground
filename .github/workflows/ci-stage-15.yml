@@ -6,7 +6,6 @@ on:
     paths:
       - 'my_test_multi-stage-15/**'
       - '.github/workflows/ci-stage-15.yml'
-  #Запускать PR-проверку,если изменения пытаются влить в main или dev
   pull_request:
     branches: [ main, dev ]
     paths:
@@ -17,7 +16,6 @@ permissions:
   contents: read
 
 jobs:
-  #Линтинг Dockerfile
   lint-api:
     runs-on: ubuntu-latest
     steps:
@@ -30,7 +28,6 @@ jobs:
           dockerfile: my_test_multi-stage-15/api/Dockerfile
           ignore: DL3008
 
-  #Запуск тестов
   test-api:
     runs-on: ubuntu-latest
     defaults:
@@ -85,7 +82,7 @@ jobs:
           cache-from: type=gha,scope=api
           cache-to: type=gha,mode=max,scope=api
 
-   lint-worker:
+  lint-worker:
     runs-on: ubuntu-latest
     steps:
       - name: Скачать код репозитория
@@ -97,7 +94,6 @@ jobs:
           dockerfile: my_test_multi-stage-15/worker/Dockerfile
           ignore: DL3008
 
-  #Запуск тестов
   test-worker:
     runs-on: ubuntu-latest
     defaults:
