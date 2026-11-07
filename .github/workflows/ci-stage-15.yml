@@ -136,7 +136,7 @@ jobs:
       - name: Собрать и запушить worker
         uses: docker/build-push-action@v5
         with:
-          context: ./my_test_multi-stage-16/worker
+          context: ./my_test_multi-stage-15/worker
           push: true
           tags: ghcr.io/stgregory-devops/devops-playground/my_test_multi-stage-15/linkwatch-worker:${{ github.sha }}
           cache-from: type=gha,scope=worker
