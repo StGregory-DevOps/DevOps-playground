@@ -34,4 +34,4 @@ jobs:
     runs-on: ubuntu-latest
     steps:
       - name: Прочитать хэш из другой джобы
-        run: echo "Мы получили хэш коммита: ${{ needs.prepare_hash.outputs.short_commit }}"
+        run: echo "Мы получили хэш коммита:${{needs.prepare_hash.outputs.short_commit }}"
