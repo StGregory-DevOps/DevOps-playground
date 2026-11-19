@@ -17,3 +17,21 @@ jobs:
           echo "Моя переменная: ${{ vars.MY_VARIABLE }}"
           # Достаем секрет (в логах GitHub его скроет звездочками!)
           echo "Мой секрет: ${{ secrets.MY_SUPER_SECRET }}"
+   
+     # --- ПРАКТИКА 2: ХЭШ И OUTPUTS ---
+  prepare_hash:
+    runs-on: ubuntu-latest
+    outputs:
+    # Объявляем, что отдаем наружу короткий хэш
+      short_commit: ${{ steps.get_hash.outputs.short_sha }}
+    steps:
+      - name: Вычислить хэш
+        id: get_hash
+        run: echo "short_sha=${GITHUB_SHA::7}" >> "$GITHUB_OUTPUT"
+
+  use_hash:
+    needs: prepare_hash # Ждем первую джобу
+    runs-on: ubuntu-latest
+    steps:
+      - name: Прочитать хэш из другой джобы
+        run: echo "Мы получили хэш коммита: ${{ needs.prepare_hash.outputs.short_commit }}"
