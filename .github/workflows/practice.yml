@@ -35,3 +35,24 @@ jobs:
     steps:
       - name: Прочитать хэш из другой джобы
         run: echo "Мы получили хэш коммита:${{needs.prepare_hash.outputs.short_commit }}"
+  book_practice:
+    runs-on: ubuntu-latest
+    steps:
+    # Практика 1: Проверка ветки
+      - name: Выполнится только в ветке main
+        if: github.ref == 'refs/heads/main'
+        run: echo "Мы находимся в ветке main!"
+
+      - name: А этот шаг выполнится всегда
+        run: echo "Я работаю в любой ветке"
+
+    # Практика 2: Ошибка и условия
+      - name: Специально вызываем ошибку
+        run: exit 1
+
+      - name: Этот шаг НЕ выполнится (нет if: always)
+        run: echo "Вы меня не увидите"
+
+      - name: А этот выполнится ВСЕГДА
+        if: always()
+        run: echo "Я сработал, потому что у меня if:always()"
