@@ -1,0 +1,19 @@
+name: Practice
+
+on: [push, pull_request]
+
+# Уровень Workflow (видно всем джобам)
+env:
+  APP_NAME: "LinkWatch-Training"
+
+jobs:
+  practice_env:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Показать переменные
+        run: |
+          echo "Имя приложения: $APP_NAME"
+          # Достаем переменную из настроек репозитория (Variables)
+          echo "Моя переменная: ${{ vars.MY_VARIABLE }}"
+          # Достаем секрет (в логах GitHub его скроет звездочками!)
+          echo "Мой секрет: ${{ secrets.MY_SUPER_SECRET }}"
