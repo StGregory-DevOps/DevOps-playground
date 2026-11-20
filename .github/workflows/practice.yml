@@ -26,7 +26,8 @@ jobs:
       short_commit: ${{ steps.get_hash.outputs.short_sha }}
     steps:
       - name: Вычислить хэш
-        id: get_hash
+        id: get_hash # Название предумываешь сам
+        # short_sha- название предумываешь сам
         run: echo "short_sha=${GITHUB_SHA::7}" >> "$GITHUB_OUTPUT"
 
   use_hash:
